@@ -19,6 +19,7 @@ int main() {
     int angleServo2 = 0;   // Ángulo inicial para servo 2
     int increment1 = 1;    // Incremento para servo 1
     int increment2 = 1;    // Incremento para servo 2
+    int detenerbucle = 1;       // Variable de control para el bucle
 
     // Abrir el puerto serial
     FILE *serial = fopen("COM3", "w"); // Cambiar por tu puerto serial en Windows o "/dev/ttyUSB0" en Linux
@@ -27,8 +28,9 @@ int main() {
         return 1;
     }
 
-    while (1) {  // Bucle infinito
-        // Enviar los ángulos de los servos a Arduino}
+    while (detenerbucle) {  /* Cuando angleServo1 sea igual a 90 y angleServo2 sea igual a 0, 
+     detenerbucle se establecerá en 0, lo que detendrá el bucle*/
+        // Enviar los ángulos de los servos a Arduino
         printf("%d %d\n", angleServo1, angleServo2);
         fprintf(serial, "%d %d\n", angleServo1, angleServo2);
         fflush(serial);  // Forzar la escritura de los datos inmediatamente
@@ -45,10 +47,12 @@ int main() {
             increment2 = -increment2;  // Cambiar la dirección del incremento para variable2
         }
 
-        // Esperar 1 segundo
+        // Espera el delay que se encuentra especificado
         delay(250);
-        if (angleServo1==90&&angleServo2==0){
-            break;
+        
+        // Verificar la condición para detener el bucle
+        if (angleServo1 == 90 && angleServo2 == 0) {
+            detenerbucle = 0;  // Cambiar la variable de control para salir del bucle
         }
     }
 
